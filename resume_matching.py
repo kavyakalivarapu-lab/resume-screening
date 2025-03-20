@@ -40,17 +40,6 @@ def rank_resumes(resume_texts, job_description):
     ranked_resumes = sorted(zip(resume_texts, scores), key=lambda x: x[1], reverse=True)
     return ranked_resumes
 
-# Function to evaluate Precision & Recall
-def evaluate_performance(similarity_scores, threshold=0.6):
-    """
-    - Precision: Fraction of retrieved resumes that are relevant.
-    - Recall: Fraction of relevant resumes that are retrieved.
-    """
-    y_true = [1 if score >= threshold else 0 for score in similarity_scores]  # Assume a threshold-based relevance
-    y_pred = [1] * len(similarity_scores)  # Assume all resumes are retrieved
-
-    precision, recall, f1, _ = precision_recall_fscore_support(y_true, y_pred, average="binary")
-    return precision, recall, f1
 
 # Streamlit UI
 st.title("📄 Resume Matching & Evaluation")
@@ -68,8 +57,6 @@ if st.button("Match Resumes"):
         # Extract rankings
         ranked_texts, similarity_scores = zip(*ranked_resumes)
 
-        # Compute Evaluation Metrics
-        precision, recall, f1 = evaluate_performance(similarity_scores)
 
         # Display Results
         results_df = pd.DataFrame({
@@ -80,9 +67,4 @@ if st.button("Match Resumes"):
         st.write("### 🔹 Resume Ranking:")
         st.dataframe(results_df)
 
-        st.write("### 📊 Evaluation Metrics:")
-        st.write(f"✅ **Precision:** {precision:.2f}")
-        st.write(f"✅ **Recall:** {recall:.2f}")
-        st.write(f"✅ **F1 Score:** {f1:.2f}")
-
-        st.success("Resume ranking and evaluation completed!")
+        st.success("Resume ranking  completed!")
